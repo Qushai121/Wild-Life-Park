@@ -1,0 +1,94 @@
+<IfModule authz_core_module>
+    Require all denied
+</IfModule>
+<IfModule !authz_core_module>
+    Deny from all
+</IfModule>
+
+
+<!-- <?= $this->extend('templates/LandingPages') ?>
+<?= $this->section('content'); ?>
+
+<div class="w-full ">
+    <?= component('LandingPages/TopBar'); ?>
+</div>
+<div class="flex flex-col xl:flex-row w-full relative px-64">
+    <div class="flex flex-col gap-6 w-full xl:w-[70%] mt-10 mb-20">
+        <?php foreach ($listTickets as $key => $listTicket) : ?>
+            <div class="bg-stone-200 text-lg font-semibold rounded-xl xl:h-fit pb-4 mx-6">
+                <div class="flex flex-col xl:flex-row gap-4 w-full xl:mt-3">
+                    <div class="w-full xl:w-[70%] xl:ml-4">
+                        <img class="h-56 w-full object-center object-cover" src="<?= base_url("upload/tickets/$listTicket[image]"); ?>" alt="">
+                    </div>
+                    <div class="w-[80vw] mx-4 ">
+                        <h1 class="text-xl font-bold ">
+                            <?= $listTicket['name']; ?>
+                        </h1>
+                        <h1 class="xl:mt-2 text-md font-normal">
+                            <?= $listTicket['description']; ?>
+                        </h1>
+                        <h1 class="text-md font-normal">
+                            Access to : <?= $listTicket['access']; ?>
+                        </h1>
+
+                        <div class="flex gap-2 xl:my-1">
+                            <div class="relative h-12 w-fit">
+                                <p class="<?= $listTicket['discount'] > 0 ? 'line-through text-sm font-light' : ''; ?> "><?= toRupiah($listTicket['price']); ?></p>
+                                <?php if ($listTicket['discount'] > 0) : ?>
+                                    <p class="absolute right-1 bottom-1 whitespace-nowrap"><?= $listTicket['discount']; ?>% OFF</p>
+                                <?php endif ?>
+                            </div>
+                            <p><?= toRupiah($listTicket['total_price_discount']); ?></p>
+                        </div>
+                        <div class="float-right">
+                            <input type="number" class="input" name="quantity" id="quantity" min="1" max="10" value="<?= $listTicket['quantity']; ?>">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach ?>
+    </div>
+    <div class="xl:w-[40%] fixed xl:relative border-t-[1px] border-stone-400 bottom-0 bg-stone-50 w-full h-14 px-4">
+        <div class="flex w-full h-full items-center justify-between gap-2 px-6">
+            <div class="text-start text-md font-semibold">
+                <p>Total</p>
+                <p><?= toRupiah($total); ?></p>
+            </div>
+            <div>
+                <button onclick="payasd()" class="btn !bg-green-400 text-white">Pay<span>(<?= $qtyTotal; ?>)</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function payasd() {
+        <?php
+        $data = [];
+        foreach ($listTickets as $key => $listTicket) {
+            $data[] = [
+                'productid' => $listTicket['id'],
+                'qty' => $listTicket['quantity'],
+            ];
+        } ?>
+
+        var data = <?= json_encode($data) ?>;
+
+        $.ajax({
+            url: "<?= base_url('payment/ticket') ?>",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                productData: data,
+                csrf_token_name: "<?= csrf_hash() ?>",
+            },
+            complete: function(res) {
+                window.location.href = res.responseJSON.result
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + '\n' + thrownError)
+            }
+        });
+    }
+</script>
+<?= $this->endSection('content'); ?> -->

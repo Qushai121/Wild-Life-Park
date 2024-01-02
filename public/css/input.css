@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.pembalik {
+    @apply invert
+}
+
+.w-0 {
+    width: 0px;
+}
+.bg-item {
+    background-color: aqua;
+}
+
+.h-full{
+    height: 100%;
+}
+
+.wrapper_shadow {
+    @apply shadow-rounded-2 max-h-max px-4 py-4 rounded-lg mt-4 overflow-auto bg-gray-50 w-full;
+  }
+
+  /* .floating_input {
+    @apply block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 rounded-lg border-2 border-stone-500 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer
+  }
+
+  .floating_label {
+    @apply absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1
+  } */
+
+.sidebarLinkPrivateActive {
+    @apply shadow-xl bg-stone-400 text-white
+}
+
