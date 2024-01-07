@@ -71,7 +71,7 @@
                                     <?= PrivatePages('Ticket/TicketManagement/editTicketManagement', ['key' => $key, 'listTicketManagement' => $listTicketManagement ,'ticketManagementMain' => $TicketManagementMain]); ?>
                                 </div>
                                 <div>
-                                    delete
+                                    <?= PrivatePages('Ticket/TicketManagement/deleteTicketManagement', ['key' => $key, 'listTicketManagement' => $listTicketManagement ]); ?>
                                 </div>
                             </td>
                         </tr>

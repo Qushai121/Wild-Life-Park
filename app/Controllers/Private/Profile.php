@@ -54,10 +54,9 @@ class Profile extends BaseController
             'avatar' => 'max_size[avatar,1024]',
         ]);
 
-        // $validation->listErrors('alert_list');
 
         if (!$valid) {
-            return redirect()->back()->withInput();
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
         $data = [
@@ -65,9 +64,9 @@ class Profile extends BaseController
             'avatar' => _imageUpload($this->request, 'avatar', 'avatar_old', 'upload/avatars/'),
         ];
 
-        $this->userModel->update(auth()->user()->id, $data);
+        $this->userModel->where('id', auth()->user()->id)->update(auth()->user()->id, $data);
 
-        return redirect()->back()->with('success', 'Data Berhasil Di Tambahkan');
+        return redirect()->back()->with('success', 'Profile Saved SuccessFully');
     }
 
     public function resetPass()
@@ -118,6 +117,6 @@ class Profile extends BaseController
         //     );
         // }
 
-        return redirect()->to('private/profile');
+        return redirect()->to('private/profile')->with('success',"Updating Your Info Worker SuccessFully");
     }
 }

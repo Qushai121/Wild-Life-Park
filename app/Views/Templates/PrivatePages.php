@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="<?= base_url('css/style.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('css/flatpickr.min.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('DataTables/css/datatables.min.css'); ?>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
         .btn {
             --tw-text-opacity: 1;
@@ -45,10 +46,30 @@
 <script type="text/javascript" src="<?= base_url('js/flatpickr.min.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('js/fullcalender.min.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('Jquery/jquery.min.js'); ?>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script type="text/javascript" src="<?= base_url('DataTables/js/datatables.min.js'); ?>"></script>
 <script type="text/javascript" src="<?= base_url('js/Global.js'); ?>"></script>
 <script>
-    
+    toastr.options.positionClass = 'toast-top-right';
+    <?php if (session('success') !== null) : ?>
+        toastr.success(`<div class=""><?= session('success') ?></div>`)
+    <?php endif ?>
+
+    <?php if (session('error') !== null) : ?>
+        toastr.error(`<div class=" my-2 text-white"><?= session('error') ?></div>`)
+    <?php elseif (session('errors') !== null) : ?>
+        toastr.error(`<div class=" my-2 text-white">
+                    <?php if (is_array(session('errors'))) : ?>
+                        <?php foreach (session('errors') as $error) : ?>
+                            <?= $error ?>
+                            <br>
+                        <?php endforeach ?>
+                    <?php else : ?>
+                        <?= session('errors') ?>
+                    <?php endif ?>
+                </div>`)
+    <?php endif ?>
+
     flatpickr("#time_input", {
         altInput: true,
         altFormat: "F j, Y",
@@ -70,20 +91,6 @@
         }, 3000);
     }
 
-    // function editModal(id) {
-    //     fetch(`http://localhost:8080/private/galery/1/edit`)
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             console.log(data);
-    //             const newDiv = document.createElement('div');
-    //             newDiv.innerHTML = data.html;
-
-    //             document.querySelector('div').appendChild(newDiv);
-    //         })
-    //         .catch(error => {
-    //             console.log('Error:', error);
-    //         });
-    // }
 
 
 

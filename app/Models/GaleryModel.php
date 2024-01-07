@@ -28,9 +28,9 @@ class GaleryModel extends Model
 
     // Validation
     protected $validationRules = [
-        // 'title' => 'required|min_length[3]',
-        // 'description' => 'required|min_length[3]',
-        // 'type' => 'required'
+        'title' => 'required|min_length[3]',
+        'description' => 'required|min_length[3]',
+        'type' => 'required'
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;

@@ -18,12 +18,19 @@
     <!-- ini untuk amanin class tailwind biar g ilang pas minify -->
     <!-- ?= $this->include('Templates/ModalAuth'); ?> -->
     <?= $this->include('components/Navbar'); ?>
-    <div class="pt-[6.4rem] flex flex-col items-center ">
+    <div class="pt-[6.4rem] flex flex-col min-h-[100vh] items-center ">
         <?= $this->renderSection('content'); ?>
     </div>
-    <!-- <footer class="bg-stone-200 py-4 mt-20 absolute bottom-0 w-full">
-        <p class="text-center font-light">&copy; 2023 Uhuy Ltd. All rights reserved.</p>
-    </footer> -->
+    <div class="z-50 w-full bg-stone-400 bg-opacity-50 backdrop-blur-md text-center">
+        <div class="flex gap-1 items-center w-full justify-center font-bold">
+            <?php
+            $nowTime = new DateTime()
+            ?>
+            <p>copyright </p>
+            <i class="fa-regular fa-copyright"></i>
+            <p>2023 - <?= $nowTime->format('Y'); ?> Uhuy.ltd</p>
+        </div>
+    </div>
 </body>
 <?= $this->include('components/LandingPages/js'); ?>
 

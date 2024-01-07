@@ -3,19 +3,19 @@
 $datas = [
     [
         'route' => "private/profile",
-        'icon' => '/icons/home.svg',
+        'icon' => 'assets/icons/profile.svg',
         'name' => 'Profile',
         'access' => 'superadmin,user,dataentry,worker,ticketguard',
     ],
-    // [
-    //     'route' => 'dashboard',
-    //     'icon' => '/icons/dashboard.svg',
-    //     'name' => 'Dashboard',
-    //     'access' => 'superadmin',
-    // ],
+    [
+        'route' => 'private/dashboard',
+        'icon' => 'assets/icons/dashboard.svg',
+        'name' => 'Dashboard',
+        'access' => 'superadmin',
+    ],
     [
         'route' => "private/galery",
-        'icon' => '/icons/store.svg',
+        'icon' => 'assets/icons/galerys.svg',
         'name' => 'Galery',
         'access' => 'superadmin,dataentry',
         'submenu' => [
@@ -33,7 +33,7 @@ $datas = [
     ],
     [
         'route' => "private/worker",
-        'icon' => '/icons/store.svg',
+        'icon' => 'assets/icons/worker.svg',
         'name' => 'Worker Management',
         'access' => 'superadmin,dataentry',
         'submenu' => [
@@ -52,7 +52,7 @@ $datas = [
     ],
     [
         'route' => "private/ticket",
-        'icon' => '/icons/store.svg',
+        'icon' => 'assets/icons/ticket.svg',
         'name' => 'Ticket Management',
         'access' => 'superadmin,dataentry,ticketguard',
         'submenu' => [
@@ -95,7 +95,7 @@ $datas = [
     // ],
     [
         'route' => "private/absent",
-        'icon' => '/icons/store.svg',
+        'icon' => 'assets/icons/absents.svg',
         'name' => 'Absents For Worker',
         'access' => 'superadmin,dataentry',
         'submenu' => [
@@ -113,7 +113,7 @@ $datas = [
     ],
     [
         'route' => 'product.index',
-        'icon' => '/icons/product.svg',
+        'icon' => 'assets/icons/news.svg',
         'name' => 'News',
         'access' => 'superadmin,dataentry',
         'submenu' => [
@@ -173,7 +173,7 @@ if (empty($data)) {
                                     <a class="sidebarMenu" href=<?= base_url($d['route']); ?>>
                                         <div class="bg-stone-50 duration-300 rounded-xl w-full h-12 flex justify-start items-center">
                                             <div class='h-8 rounded-lg w-8 shadow-base_secondary shadow-md m-2 object-cover'>
-                                                <img src=<?= base_url('/assets/icons/dashboard.svg'); ?> alt="" class='h-full p-2' />
+                                                <img src=<?= base_url($d['icon']); ?> alt="" class='h-full p-2' />
                                             </div>
                                             <p class='text-sm font-light w-[40%] whitespace-nowrap flex flex-wrap'><?= $d['name']; ?></p>
                                         </div>
@@ -183,7 +183,7 @@ if (empty($data)) {
                                         <div class="handleOpenDropDown bg-stone-50 duration-300 rounded-xl w-full h-12 flex items-center`}">
                                             <div class='w-full flex items-center'>
                                                 <div class='h-8 rounded-lg w-8 shadow-base_secondary shadow-md m-2 object-cover'>
-                                                    <img src=<?= base_url('/assets/icons/dashboard.svg'); ?> alt="" class='h-full p-2 ' />
+                                                    <img src=<?= base_url($d['icon']); ?> alt="" class='h-full p-2 ' />
                                                 </div>
                                                 <p class='text-sm font-light whitespace-nowrap flex flex-wrap'><?= $d['name']; ?></p>
                                             </div>

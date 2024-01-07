@@ -21,14 +21,22 @@ $routes->get('galery/guest', 'LandingPages\Galery::indexHuman');
 $routes->get('/park/information', 'LandingPages\Park::Information');
 $routes->get('modalauth', 'LandingPages\Home::modalAuth');
 $routes->post('ticket/quota/check', 'LandingPages\Ticket::checkTicketQuota');
+$routes->get('/login', 'Auth:login');
+
+$routes->group("private", ['namespace' => 'App\Controllers\Private', 'filter' => 'RoleFilter:superadmin,dataentry'], function ($routes) {
+    $routes->get('ticket/management', 'Ticket::indexTicketManagement');
+    $routes->post('ticket/management/add', 'Ticket::addTicketManagement');
+    $routes->put('ticket/management/edit/(:any)', 'Ticket::editTicketManagement/$1');
+    $routes->delete('ticket/management/delete/(:any)', 'Ticket::deleteTicketManagement/$1');
+});
 
 $routes->group('private', ['namespace' => 'App\Controllers\Private'], function ($routes) {
     // < Profile Controllers ------------------------------------------- >
     $routes->get('profile', 'Profile');
+    $routes->get('dashboard', 'Dashboard::indexAdmin');
     $routes->post('profile', 'Profile::avatarPost');
     $routes->put('updateMyInfoWorker', 'Profile::updateMyInfoWorker');
     // </ Profile Controllers ------------------------------------------- >
-
     $routes->resource('worker');
 
     // < Absent Controllers ------------------------------------------- >
@@ -41,9 +49,8 @@ $routes->group('private', ['namespace' => 'App\Controllers\Private'], function (
     $routes->resource('news', ['filter' => 'RoleFilter:superadmin,dataentry']);
     $routes->get('ticket/indexscan', 'Ticket::indexScan');
     $routes->post('ticket/scanUpdateData', 'Ticket::scanUpdateData');
-    $routes->get('ticket/management', 'Ticket::indexTicketManagement');
-    $routes->post('ticket/management/add', 'Ticket::addTicketManagement');
-    $routes->put('ticket/management/edit/(:any)', 'Ticket::editTicketManagement/$1');
+
+
     $routes->resource('ticket', ['filter' => 'RoleFilter:superadmin,dataentry']);
 });
 
@@ -57,16 +64,9 @@ $routes->group('payment', ['namespace' => 'App\Controllers\Payment'], ['filter' 
     $routes->post('ticket', 'TicketPayment::paySingle');
 });
 
-
-// $routes->post('payment/ticket/create/transaction', 'Payment\TicketPayment::transactionCreate');
-
 $routes->post('payment/ticket/transaction/callback', 'Payment\TicketPayment::transactionCallback');
-$routes->post('qrcode/ticket/create', 'Payment\TicketPayment::eTicketCreate');
 
 $routes->group('mypurchase', ['namespace' => 'App\Controllers\Payment'], ['filter' => 'IsLoggedIn'], function ($routes) {
     $routes->get('ticket/invoice', 'TicketPayment::invoiceViewAll');
     $routes->get('ticket/invoice/(:num)', 'TicketPayment::invoiceDetail/$1');
 });
-
-
-

@@ -257,4 +257,11 @@ class Ticket extends BaseController
 
         return redirect()->back();
     }
+
+    public function deleteTicketManagement($idEncrypt = null)
+    {
+        $id = decrypt_url($idEncrypt);
+        $this->ticketMagementModel->delete($id);
+        return redirect()->back();
+    }
 }

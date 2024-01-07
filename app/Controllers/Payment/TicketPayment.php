@@ -36,7 +36,7 @@ class TicketPayment extends BaseController
         $dataReq = $this->request->getPost('productData');
         $dateInput = $this->request->getPost('dateInput');
 
-        
+
         $quotaPerDate = null;
         $getDataByDate = $this->ticketMagementModel->getDataByDate($dateInput);
 
@@ -62,9 +62,6 @@ class TicketPayment extends BaseController
         $ticketList = [];
         $ticketListQty = 0;
         $order_id = rand();
-        $currentDateTime = new DateTime();
-        $newDateTime = $currentDateTime->modify('+7 days');
-        $expired_at = $newDateTime->format('Y-m-d H:i:s');
 
 
         foreach ($tickets as $item) {
@@ -104,72 +101,6 @@ class TicketPayment extends BaseController
         return $this->response->setJSON(['result' => $snapToken]);
     }
 
-
-    // public function paySingle()
-    // {
-    //     $dataReq = $this->request->getPost('productData');
-    //     $dateInput = $this->request->getPost('dateInput');
-    //     $quotaPerDate = 10;
-
-    //     $quota = $this->ticketQrCodeModel->getTicketQrCodeByTimeInput($dateInput);
-
-    //     if (($quotaPerDate - count($quota)) == 0) {
-    //         return $this->response->setStatusCode(401)->setJSON(['message' => "Quota E-Ticket For  " . format_datetime($dateInput) . " Is Already Full"]);
-    //     }
-
-    //     session()->set('TicketPayment', $dataReq);
-
-    //     $productQuantities  = array_column($dataReq, 'qty', 'productid');
-
-    //     $tickets = $this->ticketModel->getTicketByManyIds(
-    //         array_keys($productQuantities) ?: 0,
-    //         'id,discount,price,name,totalqrcode'
-    //     );
-
-    //     $ticketList = [];
-    //     $ticketListQty = 0;
-    //     $order_id = rand();
-    //     $currentDateTime = new DateTime();
-    //     $newDateTime = $currentDateTime->modify('+7 days');
-    //     $expired_at = $newDateTime->format('Y-m-d H:i:s');
-
-
-    //     foreach ($tickets as $item) {
-    //         $quantity = $productQuantities[$item['id']];
-    //         $ticketListQty += $item['totalqrcode'] * $quantity;
-    //         $ticketList[] = [
-    //             'id' => $item['id'],
-    //             'quantity' => $quantity,
-    //             'price' => discountPrice($item['price'], $item['discount']),
-    //             'name' => $item['name'],
-    //         ];
-    //     }
-
-    //     if (($ticketListQty + count($quota)) > $quotaPerDate) {
-    //         return $this->response->setStatusCode(401)->setJSON(['message' => "Quota For E-Ticket " . format_datetime($dateInput) . " Is Only Left " . $quotaPerDate - count($quota)]);
-    //     }
-
-    //     $params = [
-    //         'transaction_details' => [
-    //             'order_id' => $order_id,
-    //         ],
-    //         'customer_details' => [
-    //             'user_id' => auth()->user()->id,
-    //             'first_name' => auth()->user()->username,
-    //             'email' => auth()->user()->email,
-    //         ],
-    //         'item_details' => $ticketList,
-    //         "finish_redirect_url" =>  '',
-    //         "unfinish_redirect_url" => '',
-    //         'error_redirect_url' => ''
-    //     ];
-
-    //     $snapToken = \Midtrans\Snap::getSnapToken($params);
-
-    //     $this->transactionCreate($order_id, $snapToken, $dateInput, $dataReq);
-
-    //     return $this->response->setJSON(['result' => $snapToken]);
-    // }
 
     private function transactionCreate(string $order_id, string $snap_token, string $dateInput, $dataReq)
     {
@@ -237,7 +168,7 @@ class TicketPayment extends BaseController
         $response = $this->transactionModel->updateBatch($data, 'order_id');
 
 
-        
+
 
 
         if ($response) {
@@ -262,7 +193,7 @@ class TicketPayment extends BaseController
             'description' => 'Find Your Purchase Items transaction'
         ];
 
-        $data['invoiceDatas'] =  $this->transactionModel->getTransactionByUserIdWithTicket(
+        $data['invoiceDatas'] =  $this->transactionModel->getTransactionByUserIdWithTicketDesc(
             auth()->user()->id,
             'order_id,status,
             SUM(quantity) as total_quantity_all,SUM(total_price_then) as total_price_then_all,created_at,'
@@ -318,10 +249,12 @@ class TicketPayment extends BaseController
         $ticketQrcodeDatas = [];
 
         foreach ($transactionDatas as $transactionData) {
-            // dd($transactionData['created_at']);
-            $currentDateTime->setTimestamp(strtotime($transactionData['created_at']));
-            $newDateTime = $currentDateTime->modify('+7 days');
-            $expired_at = $newDateTime->format('Y-m-d H:i:s');
+            $currentDateTime->setTimestamp(strtotime($transactionData['checkin_at']));
+            $currentDateTime->modify('+1 days');
+            // Subtract one second to get 23:59:59
+            $currentDateTime->setTime(0, 0, 0);
+            $currentDateTime->modify('-1 second');
+            $expired_at = $currentDateTime->format('Y-m-d H:i:s');
 
 
             $totalTicketCostumerGet = $transactionData['quantity'] * $transactionData['totalqrcode'];
@@ -342,7 +275,7 @@ class TicketPayment extends BaseController
                     'qrcode_token' => $qrcodeIdUnique,
                     'status' => 'unused',
                     'qrcode' =>  generateQRCode($qrCodeDataParams, "upload/tickets/" . $transactionData['image'], $transactionData['name'])->getDataUri(),
-                    'expired_at' => $transactionData['checkin_at']
+                    'expired_at' => $expired_at
                 ];
             }
         }
@@ -364,4 +297,3 @@ class TicketPayment extends BaseController
         $emailService->setMessage($ticketQrcodeDatas);
     }
 }
-

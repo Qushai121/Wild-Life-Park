@@ -89,7 +89,7 @@ class Galery extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->galeryModel->errors());
         }
 
-        return redirect()->back()->with('success', 'Data Saved');
+        return redirect()->back()->with('message', 'Galery Saved SuccessFully');
     }
 
     // /**
@@ -129,7 +129,7 @@ class Galery extends BaseController
             return redirect()->back()->withInput()->with("errors$id", $this->galeryModel->errors());
         }
 
-        return redirect()->back()->with('success', 'Data Saved');
+        return redirect()->back()->with('success', 'Galery Edit SuccessFully');
     }
 
     /**
@@ -143,9 +143,9 @@ class Galery extends BaseController
         $resImage = _imageDelete($data['images'], 'upload/galerys/');
         if ($resImage) {
             $this->galeryModel->delete($id);
-            return redirect()->back()->withInput();
+            return redirect()->back()->with('error', 'Galery Delete Failed');
         }
         
-        return redirect()->back()->withInput();
+        return redirect()->back()->with('success', 'Galery Delete SuccessFully');
     }
 }

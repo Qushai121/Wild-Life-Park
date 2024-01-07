@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use DateTime;
 
 class TransactionModel extends Model
 {
@@ -53,6 +54,37 @@ class TransactionModel extends Model
     protected $afterDelete    = [];
 
 
+    public function getTransactionTotalMoneyByPeriode($status, $byMonth = null, $byYear = null)
+    {
+        $builder = $this->builder($this->table);
+
+        if (!empty($status)) {
+            $builder->groupStart();
+            $builder->where('status', $status);
+            $builder->groupEnd();
+        }
+
+        if (!empty($byMonth) && !empty($byYear)) {
+            $builder->groupStart(); // Start grouping for combined year and month conditions
+            $builder->where("YEAR($this->table.created_at)", $byYear);
+            $builder->where("MONTH($this->table.created_at)", $byMonth);
+            $builder->groupEnd(); // End grouping for combined year and month conditions
+        } elseif (!empty($byMonth)) {
+            $builder->groupStart(); // Start grouping for month condition
+            $builder->where("MONTH($this->table.created_at)", $byMonth);
+            $builder->groupEnd(); // End grouping for month condition
+        } elseif (!empty($byYear)) {
+            $builder->groupStart(); // Start grouping for year condition
+            $builder->where("YEAR($this->table.created_at)", $byYear);
+            $builder->groupEnd(); // End grouping for year condition
+        }
+
+
+
+        $builder->select('SUM(total_price_then * quantity) as total_amount');
+        return $builder->get()->getRowArray();
+    }
+
     public function getTransactionByOrderId($order_id, $select, $product_category)
     {
         $builder = $this->builder($this->table);
@@ -79,8 +111,8 @@ class TransactionModel extends Model
 
         return $builder->get()->getResultArray();
     }
-    
-   
+
+
 
     public function getTransactionByUserIdWithTicket($user_id, $select)
     {
@@ -95,8 +127,19 @@ class TransactionModel extends Model
 
         return $builder->get()->getResultArray();
     }
+    public function getTransactionByUserIdWithTicketDesc($user_id, $select)
+    {
 
+        $builder = $this->builder($this->table);
+        $builder->groupBy('order_id');
+        $builder->where('user_id', $user_id);
+        $builder->join('tickets', "tickets.id = $this->table.product_id", 'LEFT');
+        $builder->select($select);
+        $builder->select('transactions.id as transaction_id');
+        $builder->select('tickets.id as ticket_id');
 
-    
+        $builder->orderBy("$this->table.id", 'desc');
 
+        return $builder->get()->getResultArray();
+    }
 }
